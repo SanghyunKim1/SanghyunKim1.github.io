@@ -1,0 +1,164 @@
+<!DOCTYPE HTML>
+<!--
+	Massively by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html xmlns="http://www.w3.org/1999/html">
+	<head>
+		<title>MLB Analysis</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+		<SCRIPT SRC='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></SCRIPT>
+		<SCRIPT>MathJax.Hub.Config({ tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}})</SCRIPT>
+	</head>
+	<body class="is-preload">
+
+		<!-- Wrapper -->
+			<div id="wrapper">
+
+				<!-- Header -->
+					<header id="header">
+						<a href="index.html" class="logo">Sabermetrics</a>
+					</header>
+
+				<!-- Nav -->
+					<nav id="nav">
+						<ul class="links">
+							<li><a href="index.html">Projects</a></li>
+							<li class="active"><a href="generic.html">MLB Analysis</a></li>
+							<li><a href="elements.html">About Me</a></li>
+						</ul>
+						<ul class="icons">
+							<li><a href="https://github.com/shk204105" class="icon brands alt fa-github"><span class="label">GitHub</span></a></li>
+							<li><a href="https://www.kaggle.com/sanghyunkim123" class="icon brands alt fa-kaggle"><span class="label">Kaggle</span></a></li>
+							<li><a href="https://www.linkedin.com/in/sanghyun-kim-69498a192/" class="icon brands alt fa-linkedin"><span class="label">LinkedIn</span></a></li>
+						</ul>
+					</nav>
+
+				<!-- Main -->
+					<div id="main">
+
+						<!-- Post -->
+							<section class="post">
+								<header class="major">
+									<span class="date">February 22, 2021</span>
+									<h1>40% Hitting? </br>
+										50% Pitching? </h1>
+								</header>
+								<div class="image main"><img src="images/111358666_original.jpg" class="image fit" alt="" /></div>
+								<h4>1. Introduction</h4>
+								<p>Baseball is a complicated sport that consists of various external factors. Not only player skills but also other factors affect the ball game such as money, team chemistry, weather and so on (even luck as well).
+									These external factors can be broken down as follows: (i) <i>what we can measure and predict</i>, and (ii) <i>what we cannot</i>. While we can easily measure player skills with the help of advanced sabermetrics, how would you measure (or predict) luck or team chemistry?
+									Therefore, teams would definitely benefit from developing player skills rather than focusing on the unmeasurable. </br>
+									The player skills can further be broken down into four different areas: <b>Hitting</b>, <b>Pitching</b>, <b>Fielding</b> and <b>Baserunning</b>. In this column, I will statistically analyze how player skills affect a team’s winning percentage and provide readers with guidance on what aspects of player skills teams should focus on to win the ball game.
+								</p>
+								<h4>2. Methodology</h4>
+								<p> To find accurate percentage contributions of those four aspects of player skills, I first selected a single team stat for each aspect. Although those aspects of player skills (i.e., hitting, pitching, fielding and baserunning) cannot be perfectly explained by any single stat, I decided to use one stat for each part of skills to avoid overestimation problems.
+									For example, if we used OBP and OPS (or OBP and SLG) together as a representative of team’s hitting ability, then the importance of hitting ability would be overvalued because <i>doubles</i>, <i>triples</i>, and <i>home runs</i> are counted in both stats. </br>
+									The stat selection criteria are the following: (i) <i>what’s the primary job of players in terms of those four different aspects?</i> (ii) <i>how well does each stat reflect (measure) those primary jobs?</i>  Based on these two criteria, I’ve obtained team <b>wOBA</b> for hitting, <b>FIP</b> for pitching, <b>Def</b> for fielding and <b>BsR</b> for baserunning data from <i>FanGraphs.com</i>. </br>
+									<i>More details on feature selection</i>:
+										<li><b>Hitting</b>: For hitting, the primary job of hitters is to score runs (or drive runs) by reaching bases and advancing runners on bases. Therefore, I needed a stat that only quantifies <i>the pure hitting ability</i> but excludes all other things such as a baserunning ability or fielding ability. In this regard, the perfect (at least the best for now) fit would be <b>wOBA</b>.
+											Unlike other conventional stats like SLG or OPS, wOBA assigns different weights to each hitting event (single, double, triple, home run, walks etc.) in terms of run production. One of the most common problem that conventional stats have is either they treat different hitting events equally (e.g., <i>AVG</i>) or they give wrong weights to each hitting event (e.g., <i>SLG</i>).
+											Since wOBA assigns proper weights to each hitting event based on Run Production, it also reflects the changes in run production in each season (i.e., the weights assigned to hitting events differ from season to season). Thus, at the time of writing, wOBA is considered the most powerful hitting stat. </li> </br>
+
+										<li><b>Pitching</b>: Unlike hitting, finding a single stat that properly represents the pure pitching ability is way more difficult and troublesome. There's still ongoing discussions about separating pitching ability and the fielding ability. We should keep in mind that when pitchers are on the mound, fielders also do their jobs not to allow runs, and thus, it makes difficult to properly quantify the contribution of these two jobs.
+											One attempt to separate pitching and fielding is <b>DIPS (Defense Independent Pitching Statistics)</b> devised by <i>Voros McCracken</i>. The logic is simple. According to DIPS, pitchers have no control on the balls put into play, and therefore, pitchers should be judged by only what they can control: (i) <i>Strikeouts</i>, (ii) <i>Walks</i>, and (iii) <i>Home Runs</i>. </br>
+											<b>FIP</b> is one of the most popular <i>DIPS-based</i> stat that gives different weights to those three pitching events.
+											Although I somewhat disagree with the idea that pitchers have no responsibility for balls put into play at all, other conventional stats like ERA or WHIP fail to separate pitching and fielding, so I used FIP to measure a team's <i>pure pitching ability</i>. There's another stat called <i>SIERA</i> which seems to resolve limitations that FIP has but this stat is only available from the 2002 season, so I decided not to use it. </li> </br>
+
+										<li><b>Fielding</b>: Fielding is a relatively more recent research area where sabermetricians still try to find better stats. The criteria to find a single fielding measurement is: (i) <i>it should be an overall stat that properly represents a team's fielding ability</i>, and (ii) <i>it should be available for old teams like 1870s teams</i>. Based on these two criteria, I used <b>Def</b> devised by <i>FanGraphs.com</i>. </br>
+											<b>Def</b> is the sum of <i>fielding runs above average</i> and <i>positional adjustment</i>. The fielding runs above average here is measured by <i>UZR (Ultimate Zone Rating)</i> which measures a fielder's run values compared to the probability that an average MLB fielder would successfully convert balls into outs at nine different positions. </li> </br>
+
+										<li><b>Baserunning</b>: Unlike other aspects of player skills, baserunning is an area where there are not many stats available. Some sabermetricians measure a runner's sprint speed (in ft/sec), but such data are unavailable for the past day's teams and inappropriate to use for a team's base running ability. Therefore, I used <b>BsR</b> devised by <i>FanGraphs.com</i>.
+											According to <i>FanGraphs.com</i>, <b>BsR</b> is an overall base running stat that turns (i) <i>weighted stolen bases</i>, (ii) <i>weighted grounded into double play runs</i>, and (iii) <i>Ultimate Base Running (UBR)</i> into runs above/below average.</li>
+								</p>
+								<h4>3. Analysis</h4>
+								<p>
+									Since 1871, many external factors (e.g changes in rules and resilience of the ball, league expansion, advances in physical abilities etc.) have affected the way games are played. Therefore, those four league average stats would’ve fluctuated throughout the MLB history reflecting those external factors.
+									Likewise, looking at historical changes in each stat would also give us some general ideas about what the important factors were in different eras. To see those changes, I created two time series plots. (<i>Note: I used median values of each stat instead of mean values to avoid outlier issues. Also, I used scaled data to directly compare different stats</i>)
+									<img src="images/Time Series Plot1.png" class="image fit" alt="" />
+									According to the time series plots above, while <b>Def</b> and <b>BsR</b> have been staying constant over time, <b>wOBA</b> and <b>FIP</b> are relatively more fluctuating from season to season. It might indicate that the importance of a team’s <i>hitting</i> and <i>pitching</i> ability has been changing since 1871, while <i>fielding</i> and <i>baserunning</i> almost constantly contributed to a team’s winning percentage.
+									Another pattern we can see from this plot is that when league wOBA was relatively high (i.e., hitter-friendly eras), league FIP also got higher indicating that pitchers struggled with doing their jobs during the same eras, and <i>vice versa</i>. </br>
+									Furthermore, I also created year bins that represent different eras (e.g 1871-1899, 1900-1919 and so on) and drew another line plot to find a more general trend in how those league average stats have changed over time.
+									<img src="images/Time Series Plot2.png" class="image fit" alt="" />
+									According to the second line plots above, we can see a clearer trend. For instance, when the resilience of the ball increased in 1920 (the lively ball era), both league <b>wOBA</b> and <b>FIP</b> skyrocketed during the <i>1920-1939</i> era compared to the dead ball era (<i>Baseball-Reference</i>, 2006).
+									Hence, we can assume that the importance of each aspect of player skills has been affected by other external factors such as pitcher-friendly rule changes or increases in the resilience of the ball. </br>
+									On the other hand, I also compared how these stats differ on average depending on team winning percentages. To do so, I created a binary feature that represents whether a team’s winning percentage is <b>above 0.500</b> or <b>below 0.500</b>. </br>
+									<img src="images/Bar Plot.png" alt="" height="640" weight="480" /> </br>
+									The bar plot above depicts that there are notable differences in average stats between these two groups. While the differences in <b>wOBA</b> and <b>Def</b> are relatively larger, the difference in <b>FIP</b> is not as significant as wOBA and Def. However, the difference in <b>BsR</b> is marginal compared to other three stats.
+									Thus, it appears that <b>hitting</b> and <b>fielding</b> might have more significant impacts on a team's winning percentage than <b>pitching</b>, while <b>baserunning</b> might not be that important. </br>
+									However, it is not enough to conclude that how well each part of player skills contributes to a team’s winning percentage. Thus, I ran a random forest regression model for each era and compared <i>impurity-based feature importance</i>. The changes in feature importance in each era is shown in the horizontal bar chart below.
+									<img src="images/Feature Importance.png" class="image fit" alt="" />
+									In the <i>early days (1871 ~ 1899)</i>, <b>fielding</b> had the most significant impacts on a team's winning percentage (about 60.2%), while <b>hitting</b>, <b>pitching</b> and <b>baserunning</b> had marginal influences.
+									However, it appears that such a result has been reversed over time. The importance of <b>fielding</b> has declined throughout the history, whereas the importance of <b>hitting</b> and <b>pitching</b> has increased (especially, the constant increase in the importance of pitching is impressive).
+									<i>Most recently</i>, <b>hitting</b> and <b>pitching</b> account for the majority part of a team's winning percentage (<i>about 80% together</i>), while <b>fielding</b> and <b>baserunning</b> don't. </br>
+									Furthermore, there's another noticeable pattern here. <b>Baserunning</b> has never been as important as hitting, pitching, and fielding since the start of MLB. In other words, <i>teams have never benefited that much from successful base running in the MLB history</i>, so why would teams want to focus on base running? </br>
+									<b>Bottom line</b>: <i>Hitting and pitching are equally important over the course of a season, while fielding and baserunning may not be.</i>
+								</p>
+								<h4>4. Conclusion</h4>
+								<p>
+									In this column, I analyzed how important each aspect of player skills is in terms of a team's winning percentage. The four main areas are: <b>hitting</b>, <b>pitching</b>, <b>fielding</b> and <b>baserunning</b>, and these skills are measured by <i>wOBA</i>, <i>FIP</i>, <i>Def</i> and <i>BsR</i>, respectively. Of course, single stat is not enough to perfectly evaluate each areas of player abilities.
+									Nevertheless, as this project aims to understand <i>the impacts of pure skills</i>, I decided to use a single stat for each aspect of skills to avoid overestimation problems. </br>
+									Through my analysis, I came to a conclusion that <b>fielding</b> used to be the most significant factor for teams in the early days, <i>but such a trend seems to have changed over time</i>. Since the 1900s, <b>hitting</b> and <b>pitching</b> started to account for large proportions of team winning percentages, while fielding is getting less important than it used to be.
+									On the other hand, <b>baserunning</b> has never influenced a team's winning percentage that much. So it appears that teams would benefit from strengthening their hitting and pitching capacities. </br>
+									Nonetheless, this analysis also has several drawbacks. First, the <i>impurity-based</i>  method for measuring feature importance tend to overestimate numerical features. Thus, the percentage contributions of each stat might have been overestimated. Second, since I did not use post-season data, the result may be inappropriate to conclude how much importance those stats have for post-season results.
+									Therefore, further analysis would be required to see what makes the World Series champions, which is the ultimate goal of all MLB teams. </br>
+									In conclusion, <i>it's very hard to say exactly how many proportions of team winning percentages are explained by each aspect of player skills</i>. As I mentioned earlier, baseball is a complicated sport where many external factors affect the ball game like money, weather, or luck.
+									Thus, even if we can build a model with single stats that perfectly evaluate each aspect of player skills, such a model would still have some degree of limitations (how would you measure and say what proportions of a team's winning percentage can be explained by the <i>luck</i>?).
+									However, I hope this column has given readers some general ideas about what the importance of different aspects of player skills is and how it has changed over time.
+								</p>
+								<h4>5. References</h4>
+								<p> Baseball Reference (2006). Lively ball era. Retrieved from https://www.baseball-reference.com/bullpen/Lively_ball_era </p>
+
+							</section>
+
+					</div>
+
+				<!-- Footer -->
+					<footer id="footer">
+						<section class="split contact">
+							<section class="alt">
+								<h3>Address</h3>
+								<p>Syndey, NSW, Australia<br /></p>
+							</section>
+							<section>
+								<h3>Phone</h3>
+								<p>(+61) 421 797 773 🇦🇺</br>
+									(+82) 10 9507 9040 🇰🇷</p>
+							</section>
+							<section>
+								<h3>Email</h3>
+								<p>skim4524@uni.sydney.edu.au</p>
+							</section>
+							<section>
+								<h3>Social</h3>
+								<ul class="icons alt">
+									<li><a href="https://github.com/shk204105" class="icon brands alt fa-github"><span class="label">GitHub</span></a></li>
+									<li><a href="https://www.kaggle.com/sanghyunkim123" class="icon brands alt fa-kaggle"><span class="label">Kaggle</span></a></li>
+									<li><a href="https://www.linkedin.com/in/sanghyun-kim-69498a192/" class="icon brands alt fa-linkedin"><span class="label">LinkedIn</span></a></li>
+								</ul>
+							</section>
+						</section>
+					</footer>
+
+				<!-- Copyright -->
+					<div id="copyright">
+						<ul><li>&copy; Untitled</li><li>Design: <a href="https://html5up.net">HTML5 UP</a></li></ul>
+					</div>
+
+			</div>
+
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/jquery.scrollex.min.js"></script>
+			<script src="assets/js/jquery.scrolly.min.js"></script>
+			<script src="assets/js/browser.min.js"></script>
+			<script src="assets/js/breakpoints.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
+
+	</body>
+</html>
